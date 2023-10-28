@@ -1,30 +1,38 @@
-version: "3.9"
+version: '3'
 
 services:
   accountsdb:
-    container_name: accountsdb
-    image: mysql:8.0.33
-    ports:
-      - 3306:3306
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: test
       MYSQL_DATABASE: accountservice
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: test
-    networks:
-      - mandaleazy
+      MYSQL_USER: root
+      MYSQL_PASSWORD: test
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   accounts:
     image: "sankha169/accounts"
-    container_name: accounts-ms
     ports:
       - "8080:8080"
-    networks:
-      - mandaleazy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://accountsdb:3306/accountservice
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: test
+    depends_on:
+      - accountsdb
+      - wait-for-mysql
+
+  wait-for-mysql:
+    image: vishnubob/wait-for-it
+    command: ["accountsdb:3306", "--", "java", "-jar", "app.jar"]
+    volumes:
+      - ./app.jar:/app/app.jar
     depends_on:
       - accountsdb
 
-
 networks:
   mandaleazy:
-
