@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  accountsdb:
+    container_name: accountsdb
+    image: mysql:8.0.33
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: accountservice
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: test
+    networks:
+      - mandaleazy
+
+  accounts:
+    image: "sankha169/accounts"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    networks:
+      - mandaleazy
+    depends_on:
+      - accountsdb
+
+
+networks:
+  mandaleazy:
+
