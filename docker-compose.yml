@@ -5,9 +5,9 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: accountservice
-      MYSQL_USER: root
-      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: accountsdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: test
     networks:
       - mandaleazy
 
@@ -16,9 +16,8 @@ services:
     ports:
       - "8080:8080"
     environment:
+      SPRING_APPLICATION_NAME: "accounts"
       SPRING_DATASOURCE_URL: jdbc:mysql://accountsdb:3306/accountservice
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: test
     depends_on:
       - accountsdb
     networks:
