@@ -8,6 +8,8 @@ services:
       MYSQL_DATABASE: accountservice
       MYSQL_USER: root
       MYSQL_PASSWORD: test
+    networks:
+      - mandaleazy
 
   accounts:
     image: "sankha169/accounts"
@@ -19,6 +21,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: test
     depends_on:
       - accountsdb
+    networks:
+      - mandaleazy
 
 networks:
   mandaleazy:
